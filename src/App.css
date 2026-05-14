@@ -1,0 +1,148 @@
+/* ضبط الشاشة بالكامل */
+body {
+  background-color: #1e1e24; /* لون غامق مريح للعين */
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* كارت الكويز */
+.quiz-card {
+  background-color: #2b2b36;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  width: 500px; /* كده إحنا بنجبره يكون 500 بيكسل دايماً على الشاشات الكبيرة */
+  max-width: 90vw;
+  text-align: center;
+
+  /* ---- السطور الجديدة اللي هتحل المشكلة ---- */
+  min-height: 450px; /* حد أدنى للطول عشان الكارت مايصغرش عن كده */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* بتزق السؤال لفوق والزراير لتحت عشان يملوا المساحة */
+}
+
+/* مسافات السؤال */
+.question-text {
+  margin-bottom: 30px;
+  font-size: 24px;
+  line-height: 1.6;
+}
+
+/* حاوية الزراير عشان نخليهم تحت بعض */
+.answers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* شكل زرار الإجابة */
+.answer-btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease; /* غيرناها لـ all عشان تشمل اللون والحجم */
+}
+
+/* حالة الـ Hover للزراير العادية فقط (لو مفيهاش كلاس صح أو غلط) */
+.answer-btn:not(.correct):not(.wrong):hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px); /* الزرار بيطلع لفوق سنة بسيطة لما تقف عليه */
+}
+
+/* تأثير زرار حقيقي وقت الضغطة */
+.answer-btn:active {
+  transform: scale(0.98);
+}
+
+/* كلاس الإجابة الصح */
+.answer-btn.correct {
+  background-color: #22c55e;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); /* Glow أخضر خفيف */
+}
+
+/* كلاس الإجابة الغلط */
+.answer-btn.wrong {
+  background-color: #ef4444;
+}
+
+/* تنسيقات شاشة النتيجة */
+.score-section {
+  text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.score-section h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #facc15;
+}
+
+.score-text {
+  font-size: 22px;
+  margin-bottom: 30px;
+}
+
+.score-number {
+  font-weight: bold;
+  font-size: 32px;
+  color: #22c55e;
+  margin: 0 5px;
+}
+
+/* زرار إعادة الكويز */
+.restart-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.restart-btn:hover {
+  background-color: #dc2626;
+  transform: scale(1.05);
+}
+
+.restart-btn:active {
+  transform: scale(0.95);
+}
+
+/* تعريف الأنيميشن */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* تظبيط الموبايل (شاشات أصغر من 600px) */
+@media (max-width: 600px) {
+  .quiz-card {
+    padding: 25px 20px;
+  }
+  .question-text {
+    font-size: 20px;
+  }
+  .answer-btn {
+    font-size: 16px;
+    padding: 12px;
+  }
+}
