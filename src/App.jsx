@@ -1,29 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DUMMY_QUESTIONS } from "./util/questions";
-import "./App.css"; // تأكد من إنك عامل import لملف الـ CSS
+import "./App.css";
 import ShowScore from "./Components/ShowScore";
 
 function App() {
   const [userAnswers, setUserAnswers] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-
+  const [progressBar, setProgressBar] = useState(10000);
   const quizIsEnd = DUMMY_QUESTIONS.length === userAnswers.length;
   const questionNumber = userAnswers.length;
 
+  useEffect(() => {
+    if (quizIsEnd || selectedAnswer !== null) {
+      return;
+    }
+    const timer = setInterval(() => {
+      setProgressBar((prevProgress) => {
+        if (prevProgress <= 0) {
+          return 0;
+        }
+        return prevProgress - 100;
+      });
+    }, 100);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [questionNumber, selectedAnswer, quizIsEnd]);
+
+  useEffect(() => {
+    if (progressBar <= 0 && selectedAnswer === null && !quizIsEnd) {
+      quizhandler({ isCorrect: false, answerText: "timeout" });
+    }
+  }, [progressBar, selectedAnswer, quizIsEnd]);
+
   function quizhandler(answer) {
     setSelectedAnswer(answer);
-
-    // 2. نظبط التايمر
     setTimeout(() => {
       setUserAnswers((prevAnswer) => {
         return [...prevAnswer, answer];
       });
+      setProgressBar(10000);
       setSelectedAnswer(null);
     }, 2000);
   }
+
   function handleReset() {
     setUserAnswers([]);
     setSelectedAnswer(null);
+    setProgressBar(10000);
   }
 
   if (quizIsEnd) {
@@ -37,31 +62,33 @@ function App() {
     );
   }
 
+  const progressClass = progressBar <= 3000 ? "danger" : "";
+
   return (
     <>
       <div className="app-container">
         <div className="quiz-card">
+          <progress
+            className={progressClass}
+            max="10000"
+            value={progressBar}
+          ></progress>
           <h2 className="question-text">
             {DUMMY_QUESTIONS[questionNumber].questionText}
           </h2>
-
           <div className="answers-container">
             {DUMMY_QUESTIONS[questionNumber].answerOptions.map((answer) => {
               let colorClass = "";
-
-              // هل اليوزر اختار إجابة بالفعل؟
               if (selectedAnswer !== null) {
                 if (answer.isCorrect) {
-                  // 1. الإجابة الصح دايماً تنور أخضر
                   colorClass = "correct";
                 } else if (selectedAnswer.answerText === answer.answerText) {
-                  // 2. لو دي إجابة غلط، واليوزر هو اللي داس عليها، نورها أحمر
                   colorClass = "wrong";
                 }
               }
-
               return (
                 <button
+                  disabled={selectedAnswer !== null}
                   onClick={() =>
                     selectedAnswer === null ? quizhandler(answer) : null
                   }
@@ -78,4 +105,5 @@ function App() {
     </>
   );
 }
+
 export default App;
